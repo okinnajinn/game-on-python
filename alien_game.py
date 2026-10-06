@@ -2,7 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
-from ship import NextShip
+
 class AlienInvasion: #класс для управления ресурсами и поведением игры
 
     def __init__(self):
@@ -18,7 +18,7 @@ class AlienInvasion: #класс для управления ресурсами 
         pygame.display.set_caption("инопланетяне атакуют!")
 
         self.ship = Ship(self)
-        self.nextship = NextShip(self)
+        
 
         
 
@@ -27,6 +27,7 @@ class AlienInvasion: #класс для управления ресурсами 
         while True:
             self._check_events()
             self._update_screen()
+            self.ship.update()
             self.clock.tick(180)
 
     def _check_events(self):
@@ -35,11 +36,43 @@ class AlienInvasion: #класс для управления ресурсами 
             if event.type == pygame.QUIT:
                 sys.exit()
 
+            # клавища нажата - тогда включаем флаг движения корабля
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = True
+                    
+                elif event.key == pygame.K_LEFT:
+                    self.ship.moving_left = True
+
+                elif event.key == pygame.K_UP:
+                    self.ship.moving_up = True
+
+                elif event.key == pygame.K_DOWN:
+                    self.ship.moving_down = True
+
+            # клавиша отпущена - тогда выключаем флаг движения корабля
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    self.ship.moving_right = False
+
+                elif event.key == pygame.K_LEFT:
+                    self.ship.moving_left = False
+
+                elif event.key == pygame.K_UP:
+                    self.ship.moving_up = False
+
+                elif event.key == pygame.K_DOWN:
+                    self.ship.moving_down = False
+
+
+
+                    
+
     def _update_screen(self):
         # при каждом проходе цикла перерисовываем экран
         self.screen.fill(self.settings.bg_color)
         self.ship.blitme()
-        self.nextship.blitmenextship()
+       
 
         # отображение ласт прорисовки экрана
         pygame.display.flip()
